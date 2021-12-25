@@ -10,6 +10,9 @@ export default function Shop() {
     const [desc, setDesc] = useState("");
     const [emptyFieldError, setEmptyFieldError] = useState("");
 
+    // test change to push it in a new branch
+    
+
     useEffect(() => {
         localStorage.setItem("items", JSON.stringify(items));
         document.title = items.length ? `${items.length} товаров` : "Товары отсутствуют"
