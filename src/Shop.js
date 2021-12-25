@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import uuid from "react-uuid";
 import AddItem from "./AddItem.js";
 import Item from "./Item.js";
 import ItemsList from "./ItemsList.js";
 
 export default function Shop() {
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(() => JSON.parse(localStorage.getItem("items")));
     const [name, setName] = useState("");
     const [desc, setDesc] = useState("");
     const [emptyFieldError, setEmptyFieldError] = useState("");
 
-    const list = items.map((item, index) => {
+    useEffect(() => {
+        localStorage.setItem("items", JSON.stringify(items));
+        document.title = items.length ? `${items.length} товаров` : "Товары отсутствуют"
+    }, [items])
+
+    const list = items.map((item) => {
         return (
             <li className="ui-item-list" key={item.id}>
                 <Item info={item} />
@@ -30,7 +35,7 @@ export default function Shop() {
             setEmptyFieldError("И что нам делать без имени товара?");
             return;
         }
-        if(desc.trim() === ""){
+        if (desc.trim() === "") {
             setEmptyFieldError("А описание кто заполнять то будет?");
             return;
         }
@@ -43,11 +48,11 @@ export default function Shop() {
 
     }
 
-    function handleChangeName(e){
+    function handleChangeName(e) {
         setName(e.target.value)
     }
 
-    function handleChangeDesc(e){
+    function handleChangeDesc(e) {
         setDesc(e.target.value)
     }
 
@@ -57,13 +62,13 @@ export default function Shop() {
 
     return (
         <>
-            <AddItem 
-            name = {name} 
-            desc = {desc}
-            emptyFieldError = {emptyFieldError}
-            onFormSubmit = {handleFormSubmit}
-            onChangeName = {handleChangeName} 
-            onChangeDesc = {handleChangeDesc}        
+            <AddItem
+                name={name}
+                desc={desc}
+                emptyFieldError={emptyFieldError}
+                onFormSubmit={handleFormSubmit}
+                onChangeName={handleChangeName}
+                onChangeDesc={handleChangeDesc}
             />
 
             <div hidden={items.length}>
