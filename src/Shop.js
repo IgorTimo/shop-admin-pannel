@@ -10,9 +10,6 @@ export default function Shop() {
     const [desc, setDesc] = useState("");
     const [emptyFieldError, setEmptyFieldError] = useState("");
 
-    // test change to push it in a new branch
-    
-
     useEffect(() => {
         localStorage.setItem("items", JSON.stringify(items));
         document.title = items.length ? `${items.length} товаров` : "Товары отсутствуют"
@@ -45,10 +42,22 @@ export default function Shop() {
         const newItems = items.slice();
         newItems.push({ id: uuid(), name, desc });
         setItems(newItems);
+        postOnServer();
         setName("");
         setDesc("");
         setEmptyFieldError("");
 
+    }
+
+    function postOnServer() {
+        fetch("https://covid-shop-mcs.herokuapp.com", {
+            method: "POST",
+            body: JSON.stringify({ name, desc }),
+            headers: { "Content-type": "application/json" }
+        })
+        .then(r => r.json())
+        .then(d => console.log(d.message))
+        .catch(e => console.error(`Error posting on server is ${e}`))
     }
 
     function handleChangeName(e) {
